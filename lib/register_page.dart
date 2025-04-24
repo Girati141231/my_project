@@ -10,15 +10,15 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  String selectedRole = "intern"; // ค่าเริ่มต้นเป็น Intern
+  String selectedRole = "intern";
   bool isLoading = false;
-  bool _isPasswordVisible = false; // ตัวแปรในการจัดการการแสดงรหัส
+  bool _isPasswordVisible = false;
 
   Future<void> register() async {
     setState(() => isLoading = true);
 
     final response = await http.post(
-      Uri.parse("http://localhost:5000/register"), // URL ของ API
+      Uri.parse("http://localhost:5000/register"),
       headers: {"Content-Type": "application/json"},
       body: jsonEncode({
         "email": emailController.text,
@@ -34,7 +34,7 @@ class _RegisterPageState extends State<RegisterPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Registration successful!"), backgroundColor: Colors.green),
       );
-      Navigator.pop(context); // กลับไปหน้า Login
+      Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(data["msg"]), backgroundColor: Colors.red),
@@ -45,70 +45,107 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Register")),
-      body: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextField(
-              controller: emailController,
-              decoration: InputDecoration(labelText: "Email"),
-            ),
-            TextField(
-              controller: passwordController,
-              decoration: InputDecoration(
-                labelText: "Password",
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _isPasswordVisible = !_isPasswordVisible;
-                    });
-                  },
+      appBar: AppBar(
+        title: Text("Register", style: TextStyle(color: Color(0xFFeae1f9), fontFamily: 'Candal')),
+        backgroundColor: Color(0xFF110721),
+        elevation: 0,
+        iconTheme: IconThemeData(color: Color(0xFFeae1f9)),
+      ),
+      backgroundColor: Color(0xFF110721),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 40),
+              Center(
+                child: Image.asset(
+                  'assets/image.png',
+                  height: 310,
                 ),
               ),
-              obscureText: !_isPasswordVisible, // ซ่อนรหัสเมื่อ _isPasswordVisible เป็น false
-            ),
-            SizedBox(height: 10),
-            Row(
-              children: [
-                Text("Role: "),
-                Radio(
-                  value: "company",
-                  groupValue: selectedRole,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedRole = value.toString();
-                    });
-                  },
+              SizedBox(height: 1),
+              TextField(
+                controller: emailController,
+                decoration: InputDecoration(
+                  labelText: "Email",
+                  labelStyle: TextStyle(color: Color(0xFFae88e6), fontFamily: 'Candal'),
+                  fillColor: Color(0xFF1f1330),
+                  filled: true,
+                  border: OutlineInputBorder(),
                 ),
-                Text("Company"),
-                Radio(
-                  value: "intern",
-                  groupValue: selectedRole,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedRole = value.toString();
-                    });
-                  },
-                ),
-                Text("Intern"),
-              ],
-            ),
-            SizedBox(height: 20),
-            isLoading
-                ? CircularProgressIndicator()
-                : ElevatedButton(
-                    onPressed: register,
-                    child: Text("Register"),
+                style: TextStyle(color: Color(0xFFeae1f9), fontFamily: 'Candal'),
+              ),
+              SizedBox(height: 10),
+              TextField(
+                controller: passwordController,
+                decoration: InputDecoration(
+                  labelText: "Password",
+                  labelStyle: TextStyle(color: Color(0xFFae88e6), fontFamily: 'Candal'),
+                  fillColor: Color(0xFF1f1330),
+                  filled: true,
+                  border: OutlineInputBorder(),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                      color: Color(0xFFae88e6),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                      });
+                    },
                   ),
-          ],
+                ),
+                obscureText: !_isPasswordVisible,
+                style: TextStyle(color: Color(0xFFeae1f9), fontFamily: 'Candal'),
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Text("Role: ", style: TextStyle(color: Color(0xFFeae1f9), fontFamily: 'Candal')),
+                  Radio(
+                    value: "company",
+                    groupValue: selectedRole,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedRole = value.toString();
+                      });
+                    },
+                  ),
+                  Text("Company", style: TextStyle(color: Color(0xFFeae1f9), fontFamily: 'Candal')),
+                  Radio(
+                    value: "intern",
+                    groupValue: selectedRole,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedRole = value.toString();
+                      });
+                    },
+                  ),
+                  Text("Intern", style: TextStyle(color: Color(0xFFeae1f9), fontFamily: 'Candal')),
+                ],
+              ),
+              SizedBox(height: 20),
+              isLoading
+                  ? CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFae88e6)),
+                    )
+                  : ElevatedButton(
+                      onPressed: register,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFFd76b43),
+                        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                      ),
+                      child: Text("Register", style: TextStyle(color: Colors.white, fontFamily: 'Candal')),
+                    ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
+
 
